@@ -1,0 +1,24 @@
+<body>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript">
+        function setupWebViewJavascriptBridge(callback) {
+            if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+            if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+            window.WVJBCallbacks = [callback];
+            var WVJBIframe = document.createElement('iframe');
+            WVJBIframe.style.display = 'none';
+            WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+            document.documentElement.appendChild(WVJBIframe);
+            setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+        }
+        $(document).ready(function(){
+            alert('document ready');
+            setupWebViewJavascriptBridge(function(bridge){
+                bridge.registerHandler('js_handler', function(data, callback){
+                    alert('JS Receive:'+data);
+                    callback('<data after calculate>');
+                })
+            });
+        });
+        </script>
+</body>
